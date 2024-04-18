@@ -11,8 +11,8 @@
 
 **Anticipated Frameworks & Libraries:**
 
-* Express.JS
-* Svelte
+* Express.js
+* Svelte.js
 * Svelte (with SvelteKit) possibly
 * Bootstrap
 * MongoDB library
