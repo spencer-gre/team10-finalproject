@@ -2,6 +2,12 @@
 
 [Example Projects from A23](https://echo360.org/collection/50a4d343-caea-4deb-93ee-61bdd7da543f/public)
 
+**More Example Projects:**
+- [https://pushbox.glitch.me/app](https://pushbox.glitch.me/app)
+- [https://github.com/Cather-Zhang/final_project](https://github.com/Cather-Zhang/final_project)
+- [https://clip.kmoene.com/](https://clip.kmoene.com/)
+- [https://github.com/GP2P/G3P-Expense-Tracker](https://github.com/GP2P/G3P-Expense-Tracker)
+
 For your final project, you'll implement a web application that exhibits understanding of the course materials. 
 This project should provide an opportunity to both be creative and to pursue individual research and learning goals.
 
