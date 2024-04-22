@@ -3,6 +3,10 @@ import express from "express";
 import session from "express-session";
 import passport from "passport";
 import ViteExpress from "vite-express";
+import dotenv from "dotenv"
+import mongodb from 'mongodb'
+import path from "path"
+
 
 import { passportConfig } from "./config/passport.js";
 
@@ -23,12 +27,12 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-require("dotenv").config();
+dotenv.config();
 
 //Database Code
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = mongodb;
 const uri = `mongodb+srv://${process.env.USERNAME}:${process.env.PASS}@${process.env.HOST}`;
-const { parse } = require("path");
+const { parse } = path;
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
