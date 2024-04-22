@@ -1,6 +1,26 @@
 <script>
   import crossword from './assets/crossword.jpeg'
   import hangman from './assets/hangman.png'
+
+  async function postTest() {
+      const json = {},
+            body = JSON.stringify(json)
+
+      const response = await fetch( "/", {
+        method: "POST",
+        body
+      })
+      const text = await response.text()
+      console.log(text)
+    }
+
+    async function getTest() {
+      const response = await fetch( "/", {
+        method: "GET"
+      })
+      const text = await response.text()
+      console.log(text)
+    }
 </script>
 
 
@@ -50,7 +70,7 @@
             <div class="card-body">
               <img src={crossword} width="200" height="200">
               <p class="mt-3 mb-4">Guess which WPI word is being used</p>
-              <button type="button" class="btn btn-lg btn-block btn-primary">Play now</button>
+              <button type="button" class="btn btn-lg btn-block btn-primary" on:click={getTest}>Play now</button> <!--on:click added for testing purposes-->
             </div>
           </div>
           <div class="card mb-4 box-shadow">
