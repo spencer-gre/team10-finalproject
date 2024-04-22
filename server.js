@@ -23,6 +23,35 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+require("dotenv").config();
+
+//Database Code
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const uri = `mongodb+srv://${process.env.USERNAME}:${process.env.PASS}@${process.env.HOST}`;
+const { parse } = require("path");
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
+
+let users
+let crosswords
+let boards
+let hangmans
+
+async function run(){
+  await client.connect()
+  const myDatabase = await client.db("CS4241")
+  users = myDatabase.collection('Users')
+  crosswords = myDatabase.collection('Crosswords')
+  boards = myDatabase.collection('Boards')
+  hangmans = myDatabase.collection('Hangmans')
+  
+}
+
 // generic middleware that can be put on any route where user must first be
 // authenticated
 const ensureAuthenticated = function (req, res, next) {
