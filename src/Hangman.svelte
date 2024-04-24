@@ -14,6 +14,16 @@
   
   let limbsCount = 0;
 
+  let limbs = [
+        "  ____\n |    |\n |\n |\n |\n_|_",
+        "  ____\n |    |\n |    O\n |\n |\n_|_",
+        "  ____\n |    |\n |    O\n |    |\n |\n_|_",
+        "  ____\n |    |\n |    O\n |   /|\n |\n_|_",
+        "  ____\n |    |\n |    O\n |   /|\\\n |\n_|_",
+        "  ____\n |    |\n |    O\n |   /|\\\n |   / \n_|_",
+        "  ____\n |    |\n |    O\n |   /|\\\n |   / \\\n_|_"
+  ];
+
   async function postTest() {
     const json = {},
           body = JSON.stringify(json)
@@ -70,8 +80,8 @@
       alert("You lose!"); // TODO change to something better
       location.reload();
     }
-
   }
+
 
 
   tempWordArray.forEach(letter => {
@@ -103,7 +113,10 @@
       <div class="row mb-3 text-center">
 
         <div class="col-md-4 themed-grid-col">
-          <img src={hangman} class="img-thumbnail" alt="Hangman person" width="300px" height="300px">
+          <!-- <img src={hangman} class="img-thumbnail" alt="Hangman person" width="300px" height="300px"> -->
+          <div id="hangman-container">
+            <pre>{limbs[limbsCount]}</pre>
+          </div>
         </div>
         
         <div class="col-md-4 themed-grid-col">
