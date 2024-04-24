@@ -21,6 +21,10 @@
       const text = await response.text()
       console.log(text)
     }
+
+    function goToHangman() {
+      location.replace("../hangman.html");
+    }
 </script>
 
 
@@ -59,7 +63,7 @@
             <div class="card-body">
               <img src={hangman} width="200" height="200">
               <p class="mt-3 mb-4">Guess which WPI word is being used</p>
-              <button type="button" class="btn btn-lg btn-block btn-primary">Play now</button>
+              <button type="button" class="btn btn-lg btn-block btn-primary" on:click={goToHangman}>Play now</button>
             </div>
           </div>
           <div class="card mb-4 box-shadow">
