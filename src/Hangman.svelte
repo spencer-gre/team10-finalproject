@@ -5,30 +5,58 @@
   let letters3 = ['O','P','Q','R','S','T','U'];
   let letters4 = ['V','W','X','Y','Z'];
   let letters = [letters1, letters2, letters3, letters4];
+
+  let selectedButtons = [];
+
+  let tempWord = "HELLO";
+  let tempWordArray = tempWord.split("");
+  let displayedWord = [];
+
   async function postTest() {
-      const json = {},
-            body = JSON.stringify(json)
+    const json = {},
+          body = JSON.stringify(json)
 
-      const response = await fetch( "/", {
-        method: "POST",
-        body
-      })
-      const text = await response.text()
-      console.log(text)
+    const response = await fetch( "/", {
+      method: "POST",
+      body
+    })
+    const text = await response.text()
+    console.log(text)
+  }
+
+  async function getTest() {
+    const response = await fetch( "/", {
+      method: "GET"
+    })
+    const text = await response.text()
+    console.log(text)
+  }
+
+
+  const clickButton = function(event) {
+    let letter = event.target.innerText;
+    selectedButtons = [...selectedButtons, letter];
+    event.target.disabled = true;
+
+    let indices = [];
+    let index = tempWord.indexOf(letter);
+
+    while (index !== -1) {
+      indices.push(index);
+      index = tempWord.indexOf(letter, index + 1);
     }
 
-    async function getTest() {
-      const response = await fetch( "/", {
-        method: "GET"
-      })
-      const text = await response.text()
-      console.log(text)
-    }
+    indices.forEach(index => {
+      tempWord
+      displayedWord[index] = tempWordArray[index];      
+    });
+
+  }
 
 
-    const clickButton = function(button) {
-
-    }
+  tempWordArray.forEach(letter => {
+    displayedWord.push("_");
+  });
 </script>
 
 
@@ -43,28 +71,44 @@
       </div>
 
 
-
-
-
       <div class="text-center">
         <h1 class="display-4">Hangman</h1>
       </div>
 
+      <div class="row mb-3 text-center">
 
-      <div class="text-center">
-        <img src={hangman} class="img-thumbnail" alt="Hangman person" width="200" height="200">
-
-        <div class="btn-group" role="group" aria-label="Basic example">
-        {#each letters as letterList}
-          <div class="btn-group-vertical" role="group" aria-label="Basic example">
-            {#each letterList as letter}
-              <button type="button" class="btn btn-primary" id="letter{letter}" on:click={() => clickButton(letter)}>{letter}</button>
-            {/each}
+        <div class="col-md-4 themed-grid-col">
+          <img src={hangman} class="img-thumbnail" alt="Hangman person" width="300px" height="300px">
+        </div>
+        
+        <div class="col-md-4 themed-grid-col">
+          <div class="btn-group" role="group" id="hangman-buttons">
+          {#each letters as letterList}
+            <div class="col-md-3 themed-grid-col">
+              <div class="btn-group-vertical" role="group">
+                {#each letterList as letter}
+                  <button type="button" class="btn btn-primary" on:click={clickButton}>{letter}</button>
+                {/each}
+              </div>
+            </div>
+          {/each}
           </div>
-        {/each}
+        </div>
+
+        <div class="col-md-4 themed-grid-col">
+          <p class="display-5">Guessed Letters</p>
+          {#each selectedButtons as button}
+            <p>{button}</p>
+          {/each}
+
+
+        </div>
+
       </div>
 
-
+      <div class="text-center">
+        <p class="display-1">{displayedWord.join(" ")}</p>
+        <button type="button" class="btn btn-secondary">New Word</button>
       </div>
 
 
