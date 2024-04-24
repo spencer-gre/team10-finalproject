@@ -8,9 +8,11 @@
 
   let selectedButtons = [];
 
-  let tempWord = "HELLO";
+  let tempWord = "HELLO HELLO";
   let tempWordArray = tempWord.split("");
   let displayedWord = [];
+  
+  let limbsCount = 0;
 
   async function postTest() {
     const json = {},
@@ -38,24 +40,47 @@
     selectedButtons = [...selectedButtons, letter];
     event.target.disabled = true;
 
+    // determine if the letter exists
     let indices = [];
     let index = tempWord.indexOf(letter);
 
-    while (index !== -1) {
-      indices.push(index);
-      index = tempWord.indexOf(letter, index + 1);
+    if(index === -1) {
+      limbsCount++;
+    } else{
+      // determine if there are multiple letters
+      while (index !== -1) {
+        indices.push(index);
+        index = tempWord.indexOf(letter, index + 1);
+      }
     }
 
+    // add letters in displayed word if exist
     indices.forEach(index => {
       tempWord
       displayedWord[index] = tempWordArray[index];      
     });
 
+    // if win
+    if(!displayedWord.includes("_")) {
+      alert("You win!"); // TODO change to something better
+    }
+
+    // if lose
+    if(limbsCount === 6) {
+      alert("You lose!"); // TODO change to something better
+      location.reload();
+    }
+
   }
 
 
   tempWordArray.forEach(letter => {
-    displayedWord.push("_");
+    if(letter != " ") {
+      displayedWord.push("_");
+    } else {
+      displayedWord.push("|");
+    }
+    
   });
 </script>
 
@@ -100,8 +125,6 @@
           {#each selectedButtons as button}
             <p>{button}</p>
           {/each}
-
-
         </div>
 
       </div>
@@ -111,10 +134,10 @@
         <button type="button" class="btn btn-secondary">New Word</button>
       </div>
 
+      
 
-      <!-- Bootstrap core JavaScript
-      ================================================== -->
-      <!-- Placed at the end of the document so the pages load faster -->
+
+      <!-- Bootstrap core JavaScript - Placed at the end of the document so the pages load faster -->
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
       <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
       <script src="../../assets/js/vendor/popper.min.js"></script>
