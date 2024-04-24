@@ -26,3 +26,15 @@
   background-color: var(--accent3);
   border-color: var(--accent3);
 }
+
+pre {
+  font-size: 30px;
+  font-weight: 900;
+}
+
+#hangman-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: left;
+}

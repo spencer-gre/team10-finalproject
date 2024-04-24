@@ -21,31 +21,14 @@
       const text = await response.text()
       console.log(text)
     }
+
+    function goToHangman() {
+      location.replace("../hangman.html");
+    }
 </script>
 
 
 <main>
-  <!-- <div>
-    <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-      <img src={viteLogo} class="logo" alt="Vite Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
-  </div>
-  <h1>Vite + Svelte</h1>
-
-  <div class="card">
-    <Counter />
-  </div>
-
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank" rel="noreferrer">SvelteKit</a>, the official Svelte app framework powered by Vite!
-  </p>
-
-  <p class="read-the-docs">
-    Click on the Vite and Svelte logos to learn more
-  </p> -->
     <body>
 
       <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
@@ -80,7 +63,7 @@
             <div class="card-body">
               <img src={hangman} width="200" height="200">
               <p class="mt-3 mb-4">Guess which WPI word is being used</p>
-              <button type="button" class="btn btn-lg btn-block btn-primary">Play now</button>
+              <button type="button" class="btn btn-lg btn-block btn-primary" on:click={goToHangman}>Play now</button>
             </div>
           </div>
           <div class="card mb-4 box-shadow">
@@ -135,9 +118,7 @@
       </div>
 
 
-      <!-- Bootstrap core JavaScript
-      ================================================== -->
-      <!-- Placed at the end of the document so the pages load faster -->
+      <!-- Bootstrap core JavaScript - Placed at the end of the document so the pages load faster -->
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
       <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
       <script src="../../assets/js/vendor/popper.min.js"></script>
