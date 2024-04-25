@@ -1,5 +1,7 @@
 <script>
   import hangman from './assets/hangman.png'
+  import { onMount } from "svelte";
+  let authUser;
   let letters1 = ['A','B','C','D','E','F','G'];
   let letters2 = ['H','I','J','K','L','M','N'];
   let letters3 = ['O','P','Q','R','S','T','U'];
@@ -92,6 +94,19 @@
     }
     
   });
+
+  const getUser = async function () {
+    const response = await fetch("/auth/user", {
+      method: "GET",
+    });
+    let data = await response.json();
+    return data.user;
+  };
+
+  onMount(async () => {
+    let user = await getUser();
+    authUser = user;
+  });
 </script>
 
 
@@ -100,7 +115,7 @@
       <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
         <h5 class="my-0 mr-md-auto font-weight-normal">WPI Games</h5>
         <nav class="my-2 my-md-0 mr-md-3">
-          <a class="p-2 text-dark" href="#">User: Joshua Cuneo</a>
+          <a class="p-2 text-dark" href="#">User: {authUser}</a>
         </nav>
         <a class="btn btn-outline-primary" href="../login.html">Log Out</a>
       </div>

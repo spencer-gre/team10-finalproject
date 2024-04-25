@@ -4,17 +4,18 @@ import session from "express-session";
 import passport from "passport";
 import ViteExpress from "vite-express";
 import dotenv from "dotenv"
-import mongodb from 'mongodb'
-import path from "path"
-
-
+import { connect, database } from "./db/connection.js"
 import { passportConfig } from "./config/passport.js";
+import path from 'path';
+import { resolve } from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const __dirname = path.dirname(__filename); // get the name of the directory
 
 const app = express();
 
 app.use(express.json());
 passportConfig(passport);
-app.use(express.json());
 app.use(cors());
 app.use(
   session({
@@ -29,32 +30,6 @@ app.use(passport.session());
 
 dotenv.config();
 
-//Database Code
-const { MongoClient, ServerApiVersion, ObjectId } = mongodb;
-const uri = `mongodb+srv://${process.env.USERNAME}:${process.env.PASS}@${process.env.HOST}`;
-const { parse } = path;
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
-
-let users
-let crosswords
-let boards
-let hangmans
-
-async function run(){
-  await client.connect()
-  const myDatabase = await client.db("CS4241")
-  users = myDatabase.collection('Users')
-  crosswords = myDatabase.collection('Crosswords')
-  boards = myDatabase.collection('Boards')
-  hangmans = myDatabase.collection('Hangmans')
-  
-}
 
 // generic middleware that can be put on any route where user must first be
 // authenticated
@@ -62,22 +37,46 @@ const ensureAuthenticated = function (req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect("login.html");
+  res.redirect("/login");
 };
 
-app.use((req, res, next) => {
-  console.log(req.url);
-  next();
-});
+app.get('/login', (req, res) => {
+  res.redirect("login.html")
+})
 
-app.get((req, res) => {
-  console.log(req.url);
-  next();
-});
+app.get('/auth/github',
+  passport.authenticate('github', { scope: ['user:email'] }));
 
-app.post((req, res) => {
-  console.log(req.url);
-  next();
-});
+app.get('/auth/github/callback',
+  passport.authenticate('github', { failureRedirect: '/login' }),
+  function (req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
 
-ViteExpress.listen(app, 3000);
+app.get('/auth/user', ensureAuthenticated, (req, res) => {
+  res.send({ user: req.user.username} );
+})
+
+app.get('/', ensureAuthenticated, (req, res) => {
+  res.setHeader('content-type', 'text/html');
+  res.sendFile(resolve(__dirname, 'index.html'));
+})
+
+app.get('/hangman', ensureAuthenticated, (req, res) => {
+  res.sendStatus('200').end();
+})
+
+app.get('/admin', ensureAuthenticated, (req, res) => {
+  res.send('200').end()
+})
+
+connect().then(() => {
+  console.log("Connected to Mongo");
+  ViteExpress.listen(app, 3000, () => {
+    console.log("Listening to web requests");
+  })
+
+}).catch((err) => {
+  console.log(err);
+});
