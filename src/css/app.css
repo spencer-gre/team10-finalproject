@@ -26,3 +26,7 @@
   background-color: var(--accent3);
   border-color: var(--accent3);
 }
+
+.left {
+  margin-left: 20px;
+}
