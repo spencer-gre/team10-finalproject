@@ -31,6 +31,14 @@
     }
   }
 
+  async function goToAdmin() {
+    const res = await fetch('/admin', {method: "GET"})
+    if (res.status == 200) {
+      const html = location.replace('../admin.html');
+    }
+  }
+
+
   const getUser = async function () {
     const response = await fetch("/auth/user", {
       method: "GET",
@@ -52,7 +60,9 @@
     >
       <h5 class="my-0 mr-md-auto font-weight-normal">WPI Games</h5>
       <nav class="my-2 my-md-0 mr-md-3">
-        <a class="p-2 text-dark" href="#">User: {authUser}</a>
+        <button
+        type="button"
+        class="btn btn-outline-primary" on:click={goToAdmin}>{authUser}</button>
       </nav>
       <a class="btn btn-outline-primary" href="../login.html">Log Out</a>
     </div>

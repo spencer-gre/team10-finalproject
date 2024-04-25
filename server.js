@@ -67,6 +67,10 @@ app.get('/hangman', ensureAuthenticated, (req, res) => {
   res.sendStatus('200').end();
 })
 
+app.get('/admin', ensureAuthenticated, (req, res) => {
+  res.send('200').end()
+})
+
 connect().then(() => {
   console.log("Connected to Mongo");
   ViteExpress.listen(app, 3000, () => {
