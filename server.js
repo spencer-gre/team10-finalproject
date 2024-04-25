@@ -6,6 +6,11 @@ import ViteExpress from "vite-express";
 import dotenv from "dotenv"
 import { connect, database } from "./db/connection.js"
 import { passportConfig } from "./config/passport.js";
+import path from 'path';
+import { resolve } from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const __dirname = path.dirname(__filename); // get the name of the directory
 
 const app = express();
 
@@ -36,6 +41,10 @@ const ensureAuthenticated = function (req, res, next) {
   res.redirect("login.html");
 };
 
+app.get('/login', (req, res) => {
+  res.redirect("login.html")
+})
+
 app.get('/auth/github',
   passport.authenticate('github', { scope: ['user:email'] }));
 
@@ -47,30 +56,18 @@ app.get('/auth/github/callback',
   });
 
 
+app.get('/', ensureAuthenticated, (req, res) => {
+  res.setHeader('content-type', 'text/html');
+  res.sendFile(resolve(__dirname, 'index.html'));
+})
 
-app.use((req, res, next) => {
-  console.log(req.url);
-  next();
-});
-
-
-
-app.get((req, res) => {
-  console.log(req.url);
-  next();
-});
-
-app.post((req, res) => {
-  console.log(req.url);
-  next();
-});
 
 connect().then(() => {
-	console.log("Connected to Mongo");
-	ViteExpress.listen(app, 3000, () => {
-		console.log("Listening to web requests");
-	})
+  console.log("Connected to Mongo");
+  ViteExpress.listen(app, 3000, () => {
+    console.log("Listening to web requests");
+  })
 
 }).catch((err) => {
-	console.log(err);
+  console.log(err);
 });
