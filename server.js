@@ -4,10 +4,7 @@ import session from "express-session";
 import passport from "passport";
 import ViteExpress from "vite-express";
 import dotenv from "dotenv"
-import mongodb from 'mongodb'
-import path from "path"
-
-
+import { connect, database } from "./db/connection.js"
 import { passportConfig } from "./config/passport.js";
 
 const app = express();
@@ -29,32 +26,6 @@ app.use(passport.session());
 
 dotenv.config();
 
-//Database Code
-const { MongoClient, ServerApiVersion, ObjectId } = mongodb;
-const uri = `mongodb+srv://${process.env.USERNAME}:${process.env.PASS}@${process.env.HOST}`;
-const { parse } = path;
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
-
-let users
-let crosswords
-let boards
-let hangmans
-
-async function run(){
-  await client.connect()
-  const myDatabase = await client.db("CS4241")
-  users = myDatabase.collection('Users')
-  crosswords = myDatabase.collection('Crosswords')
-  boards = myDatabase.collection('Boards')
-  hangmans = myDatabase.collection('Hangmans')
-  
-}
 
 // generic middleware that can be put on any route where user must first be
 // authenticated
@@ -65,10 +36,24 @@ const ensureAuthenticated = function (req, res, next) {
   res.redirect("login.html");
 };
 
+app.get('/auth/github',
+  passport.authenticate('github', { scope: ['user:email'] }));
+
+app.get('/auth/github/callback',
+  passport.authenticate('github', { failureRedirect: '/login' }),
+  function (req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
+
+
+
 app.use((req, res, next) => {
   console.log(req.url);
   next();
 });
+
+
 
 app.get((req, res) => {
   console.log(req.url);
@@ -80,4 +65,12 @@ app.post((req, res) => {
   next();
 });
 
-ViteExpress.listen(app, 3000);
+connect().then(() => {
+	console.log("Connected to Mongo");
+	ViteExpress.listen(app, 3000, () => {
+		console.log("Listening to web requests");
+	})
+
+}).catch((err) => {
+	console.log(err);
+});
