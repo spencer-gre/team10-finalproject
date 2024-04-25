@@ -55,6 +55,9 @@ app.get('/auth/github/callback',
     res.redirect('/');
   });
 
+app.get('/auth/user', ensureAuthenticated, (req, res) => {
+  res.send({ user: req.user.username} );
+})
 
 app.get('/', ensureAuthenticated, (req, res) => {
   res.setHeader('content-type', 'text/html');
