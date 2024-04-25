@@ -16,7 +16,6 @@ const app = express();
 
 app.use(express.json());
 passportConfig(passport);
-app.use(express.json());
 app.use(cors());
 app.use(
   session({
@@ -38,7 +37,7 @@ const ensureAuthenticated = function (req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect("login.html");
+  res.redirect("/login");
 };
 
 app.get('/login', (req, res) => {
@@ -64,6 +63,9 @@ app.get('/', ensureAuthenticated, (req, res) => {
   res.sendFile(resolve(__dirname, 'index.html'));
 })
 
+app.get('/hangman', ensureAuthenticated, (req, res) => {
+  res.sendStatus('200').end();
+})
 
 connect().then(() => {
   console.log("Connected to Mongo");

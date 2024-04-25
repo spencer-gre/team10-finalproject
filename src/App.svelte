@@ -24,8 +24,11 @@
     console.log(text);
   }
 
-  function goToHangman() {
-    location.replace("../hangman.html");
+  async function goToHangman() {
+    const res = await fetch('/hangman', {method: "GET"})
+    if (res.status == 200) {
+      const html = location.replace('../hangman.html');
+    }
   }
 
   const getUser = async function () {
