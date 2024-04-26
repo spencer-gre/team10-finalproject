@@ -38,3 +38,7 @@ pre {
   align-items: flex-start;
   text-align: left;
 }
+
+.left {
+  margin-left: 20px;
+}
