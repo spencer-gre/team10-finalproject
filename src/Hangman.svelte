@@ -10,11 +10,17 @@
 
   let selectedButtons = [];
 
-  let tempWord = "HELLO HELLO";
-  let tempWordArray = tempWord.split("");
+  let guessWord = "HELLO HELLO";
+  let wordArray = [];
   let displayedWord = [];
   
   let limbsCount = 0;
+
+  let hangmanWords = []; // from database
+
+  let endMessage = ""
+
+  let buttonsDisabled = false;
 
   let limbs = [
         "  ____\n |    |\n |\n |\n |\n_|_",
@@ -25,75 +31,6 @@
         "  ____\n |    |\n |    O\n |   /|\\\n |   / \n_|_",
         "  ____\n |    |\n |    O\n |   /|\\\n |   / \\\n_|_"
   ];
-
-  async function postTest() {
-    const json = {},
-          body = JSON.stringify(json)
-
-    const response = await fetch( "/", {
-      method: "POST",
-      body
-    })
-    const text = await response.text()
-    console.log(text)
-  }
-
-  async function getTest() {
-    const response = await fetch( "/", {
-      method: "GET"
-    })
-    const text = await response.text()
-    console.log(text)
-  }
-
-
-  const clickButton = function(event) {
-    let letter = event.target.innerText;
-    selectedButtons = [...selectedButtons, letter];
-    event.target.disabled = true;
-
-    // determine if the letter exists
-    let indices = [];
-    let index = tempWord.indexOf(letter);
-
-    if(index === -1) {
-      limbsCount++;
-    } else{
-      // determine if there are multiple letters
-      while (index !== -1) {
-        indices.push(index);
-        index = tempWord.indexOf(letter, index + 1);
-      }
-    }
-
-    // add letters in displayed word if exist
-    indices.forEach(index => {
-      tempWord
-      displayedWord[index] = tempWordArray[index];      
-    });
-
-    // if win
-    if(!displayedWord.includes("_")) {
-      alert("You win!"); // TODO change to something better
-    }
-
-    // if lose
-    if(limbsCount === 6) {
-      alert("You lose!"); // TODO change to something better
-      location.reload();
-    }
-  }
-
-
-
-  tempWordArray.forEach(letter => {
-    if(letter != " ") {
-      displayedWord.push("_");
-    } else {
-      displayedWord.push("|");
-    }
-    
-  });
 
   const getUser = async function () {
     const response = await fetch("/auth/user", {
@@ -107,6 +44,76 @@
     let user = await getUser();
     authUser = user;
   });
+
+  // when a button is clicked
+  const clickButton = function(event) {
+    let letter = event.target.innerText;
+    selectedButtons = [...selectedButtons, letter];
+    event.target.disabled = true;
+
+    // determine if the letter exists
+    let indices = [];
+    let index = guessWord.indexOf(letter);
+
+    if(index === -1) {
+      limbsCount++;
+    } else{
+      // determine if there are multiple letters
+      while (index !== -1) {
+        indices.push(index);
+        index = guessWord.indexOf(letter, index + 1);
+      }
+    }
+
+    // add letters in displayed word if exist
+    indices.forEach(index => {
+      guessWord
+      displayedWord[index] = wordArray[index];      
+    });
+
+    // if win
+    if(!displayedWord.includes("_")) {
+      endMessage = "You Win!";
+      buttonsDisabled = true;
+    }
+
+    // if lose
+    if(limbsCount === 6) {
+      endMessage = "You Lose :(";
+      buttonsDisabled = true;
+    }
+  }
+
+  // Getting data from the server
+  const getWords = async function() {
+    const response = await fetch( "/hangmanWords/", {
+      method:"GET"
+    }).then(async function(response) {
+      hangmanWords = JSON.parse(await response.text());
+      
+      for (let i = 0; i < hangmanWords.length; i++) {
+        hangmanWords[i] = hangmanWords[i].word;
+      }
+
+      guessWord = hangmanWords[Math.floor(Math.random() * hangmanWords.length)];
+      wordArray = guessWord.split("");
+
+      wordArray.forEach(letter => {
+        if(letter != " ") {
+          displayedWord.push("_");
+        } else {
+          displayedWord.push("|");
+        }
+      });
+      displayedWord[0] = "_";
+    })
+  }
+
+  const newWord = function() {
+    location.reload();
+  }
+
+  getWords();
 </script>
 
 
@@ -129,7 +136,6 @@
       <div class="row mb-3 text-center">
 
         <div class="col-md-4 themed-grid-col">
-          <!-- <img src={hangman} class="img-thumbnail" alt="Hangman person" width="300px" height="300px"> -->
           <div id="hangman-container">
             <pre>{limbs[limbsCount]}</pre>
           </div>
@@ -141,7 +147,7 @@
             <div class="col-md-3 themed-grid-col">
               <div class="btn-group-vertical" role="group">
                 {#each letterList as letter}
-                  <button type="button" class="btn btn-primary" on:click={clickButton}>{letter}</button>
+                  <button type="button" class="btn btn-primary" disabled={buttonsDisabled} on:click={clickButton}>{letter}</button>
                 {/each}
               </div>
             </div>
@@ -160,7 +166,8 @@
 
       <div class="text-center">
         <p class="display-1">{displayedWord.join(" ")}</p>
-        <button type="button" class="btn btn-secondary">New Word</button>
+        <button type="button" class="btn btn-secondary" on:click={newWord}>New Word</button>
+        <p class="display-3">{endMessage}</p>
       </div>
 
       
