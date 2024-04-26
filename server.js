@@ -9,6 +9,7 @@ import { passportConfig } from "./config/passport.js";
 import path from 'path';
 import { resolve } from 'path';
 import { fileURLToPath } from 'url';
+import { MongoClient } from 'mongodb';
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
 
@@ -80,3 +81,31 @@ connect().then(() => {
 }).catch((err) => {
   console.log(err);
 });
+
+
+
+const client = new MongoClient(process.env.MONGO)
+
+let hangmanCollection = null;
+let hangmanWords = [];
+
+// // Runs the connection with the client
+async function getHangmanWords() {
+  await client.connect()
+  hangmanCollection = client.db("final_project").collection("hangmans");
+
+   // route to get all docs
+  app.get("/hangmanWords/", async (request, response) => {
+    if (hangmanCollection !== null) {
+      hangmanWords = await hangmanCollection.find({}).toArray();
+      response.writeHead( 200, { 'Content-Type': 'application/json'});
+      response.end(JSON.stringify(hangmanWords));
+    }
+  })
+}
+
+getHangmanWords();
+
+
+
+
