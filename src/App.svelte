@@ -102,18 +102,6 @@
             >
           </div>
         </div>
-        <div class="card mb-4 box-shadow">
-          <div class="card-header">
-            <h4 class="my-0 font-weight-normal">Other Game</h4>
-          </div>
-          <div class="card-body">
-            <img src={crossword} width="200" height="200" />
-            <p class="mt-3 mb-4">Guess which WPI word is being used</p>
-            <button type="button" class="btn btn-lg btn-block btn-primary"
-              >Play now</button
-            >
-          </div>
-        </div>
       </div>
 
       <!-- <footer class="pt-4 my-md-5 pt-md-5 border-top">

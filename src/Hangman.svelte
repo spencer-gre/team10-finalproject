@@ -94,9 +94,6 @@
       for (let i = 0; i < hangmanWords.length; i++) {
         hangmanWords[i] = hangmanWords[i].word;
       }
-      hangmanWords.forEach(element => {
-        console.log(element);
-      });
 
       guessWord = hangmanWords[Math.floor(Math.random() * hangmanWords.length)];
       wordArray = guessWord.split("");
