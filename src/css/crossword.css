@@ -1,0 +1,41 @@
+:root {
+    /* Color palette */
+  
+    --white: #f5f5f5;
+    /* --black: #151414; */
+    --linkBlue: #3300FF;
+    --accent1: #f57851;
+    --accent2: #f5b151;
+    --accent3: #f59650;
+    --accent4: #f55c51;
+    --accent5: #f5c551;
+    --accent6: #f5c5a2;
+  }
+  
+  .btn-primary {
+    color: inherit;
+    background-color: var(--accent4);
+    border-color: var(--accent4);
+  }
+  
+  .btn-primary:hover {
+    color: inherit;
+    background-color: var(--accent3);
+    border-color: var(--accent3);
+  }
+  
+  pre {
+    font-size: 30px;
+    font-weight: 900;
+  }
+  
+  #crossword-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+  }
+  
+  .left {
+    margin-left: 20px;
+  }
