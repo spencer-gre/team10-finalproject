@@ -76,6 +76,49 @@ app.get('/admin', ensureAuthenticated, (req, res) => {
   res.send('200').end()
 })
 
+app.get('/hangmanWords', async (req, res) => {
+  const db = database();
+  const coll = db.collection("hangmans");
+
+  let hangmanWords = [];
+
+  hangmanWords = await coll.find({}).toArray();
+  res.writeHead( 200, { 'Content-Type': 'application/json'});
+  res.end(JSON.stringify(hangmanWords));
+})
+
+app.post('/hangman/add', ensureAuthenticated, async (req, res) => {
+  const db = database();
+  const coll = await db.collection("hangmans");
+  const word_req = req.body.word;
+  const doc = {
+    word: word_req
+  };
+  const rslt = await coll.insertOne(doc);
+  if (rslt.insertedId == null) {
+    res.status(500).send('ERROR');
+  }
+  else {
+    res.status(200).send('OK');
+  }
+})
+
+app.post('/hangman/remove', ensureAuthenticated, async (req, res) => {
+  const db = database();
+  const coll = await db.collection("hangmans");
+  const word_req = req.body.word;
+  const query = { word: word_req };
+  const find = await coll.findOne(query);
+  if (find) {
+    const rslt = await coll.deleteOne({_id: find._id});
+    if (rslt.deletedCount === 1) {
+      res.status(200).send('OK')
+    }
+  } else {
+    res.status(500).send('ERROR');
+  }
+})
+
 connect().then(() => {
   console.log("Connected to Mongo");
   ViteExpress.listen(app, 3000, () => {
@@ -88,39 +131,15 @@ connect().then(() => {
 
 
 
-const client = new MongoClient(process.env.MONGO)
+app.get('/crosswordData', async (req, res) => {
+  const db = database();
+  const coll = await db.collection("crosswords");
+  let crosswordData;
 
-let hangmanCollection = null;
-let hangmanWords = [];
-
-// // Runs the connection with the client
-async function getHangmanWords() {
-  await client.connect()
-  hangmanCollection = client.db("final_project").collection("hangmans");
-
-   // route to get all docs
-  app.get("/hangmanWords/", async (request, response) => {
-    if (hangmanCollection !== null) {
-      hangmanWords = await hangmanCollection.find({}).toArray();
-      response.writeHead( 200, { 'Content-Type': 'application/json'});
-      response.end(JSON.stringify(hangmanWords));
-    }
-  })
-}
-
-getHangmanWords();
-
-async function getCrosswordData() {
-  await client.connect()
-  crosswordCollection = client.db("final_project").collection("crosswords");
-
-  app.get("/crosswordData/", async (request, response) => {
-    crosswordData = await crosswordCollection.find({}).toArray();
-    response.writeHead( 200, { 'Content-Type': 'application/json'});
-    response.end(JSON.stringify(crosswordData));
-  })
-}
-
+  crosswordData = await crosswordCollection.find({}).toArray();
+  res.writeHead( 200, { 'Content-Type': 'application/json'});
+  res.end(JSON.stringify(crosswordData));
+})
 
 
 
