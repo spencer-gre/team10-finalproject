@@ -106,6 +106,17 @@ async function getHangmanWords() {
 
 getHangmanWords();
 
+async function getCrosswordData() {
+  await client.connect()
+  crosswordCollection = client.db("final_project").collection("crosswords");
+
+  app.get("/crosswordData/", async (request, response) => {
+    crosswordData = await crosswordCollection.find({}).toArray();
+    response.writeHead( 200, { 'Content-Type': 'application/json'});
+    response.end(JSON.stringify(crosswordData));
+  })
+}
+
 
 
 

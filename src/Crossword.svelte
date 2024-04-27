@@ -20,7 +20,7 @@
 
     // Get crossword data from the mongodb
     const getCrosswordData = async () => {
-        const response = await fetch("/getCrosswordData"); // Assuming you have an API endpoint to fetch crossword data
+        const response = await fetch("/getCrosswordData"); 
         const data = await response.json();
         return data;
     };
