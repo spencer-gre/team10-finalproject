@@ -1,6 +1,8 @@
 <script>
   import { onMount } from "svelte";
-  let authUser;
+  import Header from "./lib/Header.svelte";
+
+  let user;
   
 
   const getUser = async function () {
@@ -54,22 +56,16 @@
   }
 
   onMount(async () => {
-    let user = await getUser();
-    authUser = user;
+    let github = await getUser();
+    user = github;
   });
 </script>
 
 
 <main>
     <body>
-      <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-        <a class="btn btn-outline-primary" href="../">Back to Home</a>
-        <h5 class="left my-0 mr-md-auto font-weight-normal">WPI Games</h5>
-        <nav class="my-2 my-md-0 mr-md-3">
-          <a class="p-2 text-dark" href='#'>User: {authUser}</a>
-        </nav>
-        <a class="btn btn-outline-primary" href="../login.html">Log Out</a>
-      </div>
+      <Header authUser={user}/>
+   
 
       <div class="container">
         <div class="card-deck mb-3 text-center">
