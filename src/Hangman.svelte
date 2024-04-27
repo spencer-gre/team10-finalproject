@@ -86,7 +86,7 @@
 
   // Getting data from the server
   const getWords = async function() {
-    const response = await fetch( "/hangmanWords/", {
+    const response = await fetch( "/hangmanWords", {
       method:"GET"
     }).then(async function(response) {
       hangmanWords = JSON.parse(await response.text());

@@ -72,6 +72,17 @@ app.get('/admin', ensureAuthenticated, (req, res) => {
   res.send('200').end()
 })
 
+app.get('/hangmanWords', async (req, res) => {
+  const db = database();
+  const coll = db.collection("hangmans");
+
+  let hangmanWords = [];
+
+  hangmanWords = await coll.find({}).toArray();
+  res.writeHead( 200, { 'Content-Type': 'application/json'});
+  res.end(JSON.stringify(hangmanWords));
+})
+
 connect().then(() => {
   console.log("Connected to Mongo");
   ViteExpress.listen(app, 3000, () => {
@@ -81,30 +92,6 @@ connect().then(() => {
 }).catch((err) => {
   console.log(err);
 });
-
-
-
-const client = new MongoClient(process.env.MONGO)
-
-let hangmanCollection = null;
-let hangmanWords = [];
-
-// // Runs the connection with the client
-async function getHangmanWords() {
-  await client.connect()
-  hangmanCollection = client.db("final_project").collection("hangmans");
-
-   // route to get all docs
-  app.get("/hangmanWords/", async (request, response) => {
-    if (hangmanCollection !== null) {
-      hangmanWords = await hangmanCollection.find({}).toArray();
-      response.writeHead( 200, { 'Content-Type': 'application/json'});
-      response.end(JSON.stringify(hangmanWords));
-    }
-  })
-}
-
-getHangmanWords();
 
 
 
