@@ -9,6 +9,8 @@
     let selectedButtons = [];
     let buttonsDisabled = false;
     let endMessage = ""
+    let cluesAcross = ["3. Number of original WPI founders","4. Acronym for the interdisciplinary project typically done off-campus", "5. Original name of the Innovation Studio"];
+    let cluesDown = ["1. Last name of the previous president of WPI", "2. Newest acaedmic building on campus"];
 
     const getUser = async function () {
         const response = await fetch("/auth/user", {
@@ -34,10 +36,12 @@
     };
 
     // Function to handle user input
-    const handleInput = (rowIndex, colIndex, value) => {
+    const handleInput = function (rowIndex, colIndex, value) {
         if (crosswordData[rowIndex][colIndex] === value) {
+            userCrosswordData[rowIndex][colIndex] = value
             checkCrosswordCompletion();
         }
+        console.log(rowIndex);
     };
 
     onMount(async () => {
@@ -58,7 +62,41 @@
     
 </script>
 
+
 <div id="crossword-container">
+  <table class="table">
+    {#each crosswordData as row, rowIndex}
+      <tr>
+        {#each row as cell, colIndex}
+          {#if cell == "!"}
+            <td class=table-dark></td>
+          {:else}
+            <td>
+              <input on:input={handleInput} type="text" class="input-group-sm" name="" id="{cell}">
+              </td>
+          {/if}
+
+        {/each}
+      </tr>
+    {/each}
+  </table>
+</div>
+
+<!-- 
+  <div>
+  <ol>
+    {#each clues as descr}
+      <li>{descr}</li>
+
+    {/each}
+  </ol>
+</div> -->
+
+
+
+
+
+<!-- <div id="crossword-container">
     {#each crosswordData as row, rowIndex}
       <div class="row">
         {#each row as cell, colIndex}
@@ -76,7 +114,7 @@
         {/each}
       </div>
     {/each}
-  </div>
+  </div> -->
   
   {#if endMessage !== ''}
     <p>{endMessage}</p>

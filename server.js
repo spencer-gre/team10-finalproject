@@ -68,6 +68,10 @@ app.get('/hangman', ensureAuthenticated, (req, res) => {
   res.sendStatus('200').end();
 })
 
+app.get('/crossword', ensureAuthenticated, (req, res) => {
+  res.sendStatus('200').end();
+})
+
 app.get('/admin', ensureAuthenticated, (req, res) => {
   res.send('200').end()
 })
