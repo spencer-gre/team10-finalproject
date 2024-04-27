@@ -20,6 +20,14 @@
     }
   }
 
+  async function goToCrossword() {
+    const res = await fetch('/crossword', {method: "GET"})
+    if (res.status == 200) {
+      const html = location.replace('../crossword.html');
+    }
+  }
+
+
   const getUser = async function () {
     const response = await fetch("/auth/user", {
       method: "GET",
@@ -56,6 +64,7 @@
             <button
               type="button"
               class="btn btn-lg btn-block btn-primary"
+              on:click={goToCrossword}>Play now</button
               >Play now</button
             >
             <!--on:click added for testing purposes-->

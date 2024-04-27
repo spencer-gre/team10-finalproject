@@ -68,6 +68,10 @@ app.get('/hangman', ensureAuthenticated, (req, res) => {
   res.sendStatus('200').end();
 })
 
+app.get('/crossword', ensureAuthenticated, (req, res) => {
+  res.sendStatus('200').end();
+})
+
 app.get('/admin', ensureAuthenticated, (req, res) => {
   res.send('200').end()
 })
@@ -125,6 +129,17 @@ connect().then(() => {
   console.log(err);
 });
 
+
+
+app.get('/crosswordData', async (req, res) => {
+  const db = database();
+  const coll = await db.collection("crosswords");
+  let crosswordData;
+
+  crosswordData = await crosswordCollection.find({}).toArray();
+  res.writeHead( 200, { 'Content-Type': 'application/json'});
+  res.end(JSON.stringify(crosswordData));
+})
 
 
 
