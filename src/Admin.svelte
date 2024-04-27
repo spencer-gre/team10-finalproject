@@ -32,6 +32,27 @@
     }
   }
 
+  const removeHangman = async function(event) {
+    event.preventDefault();
+
+    const form = document.getElementById("hangmanForm");
+    const word = document.querySelector("#hangmanInputWord"),
+      json = { word: word.value },
+      body = JSON.stringify(json);
+    
+    form.reset();
+
+    const response = await fetch ("/hangman/remove", {
+      method: "POST",
+			headers: { "Content-Type": "application/json" },
+      body,
+    });
+
+    if (response.ok) {
+      // maybe do something
+    }
+  }
+
   onMount(async () => {
     let user = await getUser();
     authUser = user;
@@ -78,7 +99,7 @@
                   <input type="text" class="form-control" name="hangmanInputWord" id="hangmanInputWord">
                 </div>
                 <button on:click={insertHangman} type="submit" class="btn btn-lg btn-block btn-primary" value="insert">Insert</button>
-                <button type="submit" class="btn btn-lg btn-block btn-primary" value="remove">Remove</button>
+                <button on:click={removeHangman} type="submit" class="btn btn-lg btn-block btn-primary" value="remove">Remove</button>
               </form>
             </div>
           </div>

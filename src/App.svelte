@@ -4,26 +4,7 @@
   import hangman from "./assets/hangman.png";
 
   let authUser;
-  async function postTest() {
-    const json = {},
-      body = JSON.stringify(json);
-
-    const response = await fetch("/", {
-      method: "POST",
-      body,
-    });
-    const text = await response.text();
-    console.log(text);
-  }
-
-  async function getTest() {
-    const response = await fetch("/", {
-      method: "GET",
-    });
-    const text = await response.text();
-    console.log(text);
-  }
-
+  
   async function goToHangman() {
     const res = await fetch('/hangman', {method: "GET"})
     if (res.status == 200) {
@@ -37,7 +18,6 @@
       const html = location.replace('../admin.html');
     }
   }
-
 
   const getUser = async function () {
     const response = await fetch("/auth/user", {
@@ -83,7 +63,7 @@
             <button
               type="button"
               class="btn btn-lg btn-block btn-primary"
-              on:click={getTest}>Play now</button
+              >Play now</button
             >
             <!--on:click added for testing purposes-->
           </div>

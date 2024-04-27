@@ -99,6 +99,22 @@ app.post('/hangman/add', ensureAuthenticated, async (req, res) => {
   }
 })
 
+app.post('/hangman/remove', ensureAuthenticated, async (req, res) => {
+  const db = database();
+  const coll = await db.collection("hangmans");
+  const word_req = req.body.word;
+  const query = { word: word_req };
+  const find = await coll.findOne(query);
+  if (find) {
+    const rslt = await coll.deleteOne({_id: find._id});
+    if (rslt.deletedCount === 1) {
+      res.status(200).send('OK')
+    }
+  } else {
+    res.status(500).send('ERROR');
+  }
+})
+
 connect().then(() => {
   console.log("Connected to Mongo");
   ViteExpress.listen(app, 3000, () => {
