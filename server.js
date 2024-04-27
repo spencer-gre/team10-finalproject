@@ -119,6 +119,16 @@ app.post('/hangman/remove', ensureAuthenticated, async (req, res) => {
   }
 })
 
+app.get('/crosswordData', async (req, res) => {
+  const db = database();
+  const coll = await db.collection("crosswords");
+  let crosswordData;
+
+  crosswordData = await coll.find({}).toArray();
+  res.writeHead( 200, { 'Content-Type': 'application/json'});
+  res.end(JSON.stringify(crosswordData));
+})
+
 connect().then(() => {
   console.log("Connected to Mongo");
   ViteExpress.listen(app, 3000, () => {
@@ -128,18 +138,5 @@ connect().then(() => {
 }).catch((err) => {
   console.log(err);
 });
-
-
-
-app.get('/crosswordData', async (req, res) => {
-  const db = database();
-  const coll = await db.collection("crosswords");
-  let crosswordData;
-
-  crosswordData = await crosswordCollection.find({}).toArray();
-  res.writeHead( 200, { 'Content-Type': 'application/json'});
-  res.end(JSON.stringify(crosswordData));
-})
-
 
 
