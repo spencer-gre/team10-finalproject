@@ -83,6 +83,22 @@ app.get('/hangmanWords', async (req, res) => {
   res.end(JSON.stringify(hangmanWords));
 })
 
+app.post('/hangman/add', ensureAuthenticated, async (req, res) => {
+  const db = database();
+  const coll = await db.collection("hangmans");
+  const word_req = req.body.word;
+  const doc = {
+    word: word_req
+  };
+  const rslt = await coll.insertOne(doc);
+  if (rslt.insertedId == null) {
+    res.status(500).send('ERROR');
+  }
+  else {
+    res.status(200).send('OK');
+  }
+})
+
 connect().then(() => {
   console.log("Connected to Mongo");
   ViteExpress.listen(app, 3000, () => {
