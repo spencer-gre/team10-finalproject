@@ -125,8 +125,18 @@ app.get('/crosswordData', async (req, res) => {
   let crosswordData;
 
   crosswordData = await coll.find({}).toArray();
+  const random = Math.floor(Math.random() * crosswordData.length);
+  const crossword = crosswordData[random]
+
+  const cwName = crossword.name;
+  delete crossword.name;
+  delete crossword._id;
+
+  const ret = {cw: crossword, name: cwName};
+
+
   res.writeHead( 200, { 'Content-Type': 'application/json'});
-  res.end(JSON.stringify(crosswordData));
+  res.end(JSON.stringify(ret));
 })
 
 connect().then(() => {
