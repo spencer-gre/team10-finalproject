@@ -1,7 +1,6 @@
 <script>
 	import { onMount } from "svelte";
 	import Header from "./lib/Header.svelte";
-	import res from "express/lib/response";
 
 	let authUser;
 	let crosswordSelect;
@@ -36,7 +35,7 @@
 		return data;
 	};
 
-	const checkHangman = async function (event) {
+	const checkCrossword = async function (event) {
 		event.preventDefault();
 		console.log(event);
 
@@ -104,10 +103,10 @@
 					{/each}
 				</table>
 				<button
-					on:click={checkHangman}
+					on:click={checkCrossword}
 					type="submit"
 					class="btn btn-lg btn-block btn-primary"
-					value="check">Check Hangman</button
+					value="check">Check Crossword</button
 				>
 			</form>
 		</div>
