@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from "svelte";
+	import Header from "./lib/Header.svelte";
 
 	let authUser;
 	let crosswordSelect;
@@ -41,7 +42,6 @@
 		const crosswordForm = document.getElementById("crosswordForm");
 		const inputs = crosswordForm.querySelectorAll("input");
 
-
 		let validCount = 0;
 		inputs.forEach((ele) => {
 			if (ele.id.toUpperCase == ele.value.toUpperCase) {
@@ -63,7 +63,6 @@
 		return data;
 	};
 
-
 	onMount(async () => {
 		// crosswordData = rows.map((row) => row.split(""));
 		crosswordSelect = await getCrosswordData(); // Assuming user's filled data is fetched separately
@@ -76,38 +75,44 @@
 	});
 </script>
 
-<div class="container" id="crossword-container">
-	<form id="crosswordForm">
-		<table class="table table-reactive-sm">
-			{#each Object.values(crossword) as row}
-				<tr>
-					{#each Object.values(row) as cell}
-						{#if cell == "!"}
-							<td class="bg-dark"></td>
-						{:else}
-							<td>
-								<input
-									style="width:100%"
-									type="text"
-									class="input-group-sm"
-									name=""
-									id={cell}
-								/>
-							</td>
-						{/if}
-					{/each}
-				</tr>
-			{/each}
-		</table>
-		<button
-			on:click={checkHangman}
-			type="submit"
-			class="btn btn-lg btn-block btn-primary"
-			value="check">Check Hangman</button
-		>
-	</form>
-</div>
+<main>
+	<body>
+		<Header {authUser} />
 
-{#if endMessage !== ""}
-	<p>{endMessage}</p>
-{/if}
+		<div class="container" id="crossword-container">
+			<form id="crosswordForm">
+				<table class="table table-reactive-sm">
+					{#each Object.values(crossword) as row}
+						<tr>
+							{#each Object.values(row) as cell}
+								{#if cell == "!"}
+									<td class="bg-dark"></td>
+								{:else}
+									<td>
+										<input
+											style="width:100%"
+											type="text"
+											class="input-group-sm"
+											name=""
+											id={cell}
+										/>
+									</td>
+								{/if}
+							{/each}
+						</tr>
+					{/each}
+				</table>
+				<button
+					on:click={checkHangman}
+					type="submit"
+					class="btn btn-lg btn-block btn-primary"
+					value="check">Check Hangman</button
+				>
+			</form>
+		</div>
+
+		{#if endMessage !== ""}
+			<p>{endMessage}</p>
+		{/if}
+	</body>
+</main>
