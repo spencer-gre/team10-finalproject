@@ -1,135 +1,113 @@
 <script>
-  import { onMount } from "svelte";
+	import { onMount } from "svelte";
 
-  let authUser;
-  let numRows = 6; //number of rows
-  let numCols = 11; //number of cols
-  let crosswordData = [];
-  let userCrosswordData = [];
-  let selectedButtons = [];
-  let buttonsDisabled = false;
-  let endMessage = "";
-  let cluesAcross = [
-    "3. Number of original WPI founders",
-    "4. Acronym for the interdisciplinary project typically done off-campus",
-    "5. Original name of the Innovation Studio",
-  ];
-  let cluesDown = [
-    "1. Last name of the previous president of WPI",
-    "2. Newest acaedmic building on campus",
-  ];
+	let authUser;
+	let crosswordSelect;
+	let crossword = [];
+	let crosswordName;
+	let userCrosswordData = [];
+	let selectedButtons = [];
+	let buttonsDisabled = false;
+	let endMessage = "";
+	let cluesAcross = [
+		"3. Number of original WPI founders",
+		"4. Acronym for the interdisciplinary project typically done off-campus",
+		"5. Original name of the Innovation Studio",
+	];
+	let cluesDown = [
+		"1. Last name of the previous president of WPI",
+		"2. Newest acaedmic building on campus",
+	];
 
-  const getUser = async function () {
-    const response = await fetch("/auth/user", {
-      method: "GET",
-    });
-    let data = await response.json();
-    return data.user;
-  };
+	const getUser = async function () {
+		const response = await fetch("/auth/user", {
+			method: "GET",
+		});
+		let data = await response.json();
+		return data.user;
+	};
 
-  // Get crossword data from the mongodb
-  const getCrosswordData = async () => {
-    const response = await fetch("/crosswordData");
-    const data = await response.json();
-    return data;
-  };
+	// Get crossword data from the mongodb
+	const getCrosswordData = async () => {
+		const response = await fetch("/crosswordData");
+		const data = await response.json();
+		return data;
+	};
 
-  const checkCrosswordCompletion = () => {
-    const filledCrossword = crosswordData
-      .flat()
-      .filter((cell) => cell !== "!")
-      .join("");
-    const solution = userCrosswordData
-      .flat()
-      .filter((cell) => cell !== "!")
-      .join("");
-    if (filledCrossword === solution) {
-      endMessage = "Congratulations! You completed the crossword!";
-    }
-  };
+	const checkHangman = async function (event) {
+		event.preventDefault();
+		console.log(event);
 
-  // Function to handle user input
-  const handleInput = function (rowIndex, colIndex, value) {
-    if (crosswordData[rowIndex][colIndex] === value) {
-      userCrosswordData[rowIndex][colIndex] = value;
-      checkCrosswordCompletion();
-    }
-    console.log(rowIndex);
-  };
+		const crosswordForm = document.getElementById("crosswordForm");
+		const inputs = crosswordForm.querySelectorAll("input");
 
-  onMount(async () => {
-    const rows = [
-      "!!!!l!!!!!!",
-      "!!!!e!!!u!!",
-      "!!!!seven!!",
-      "!!!!h!!!iqp",
-      "foisie!!t!!",
-      "!!!!n!!!y!!",
-    ];
-    crosswordData = rows.map((row) => row.split(""));
-    userCrosswordData = await getCrosswordData(); // Assuming user's filled data is fetched separately
-    let user = await getUser();
-    authUser = user;
-  });
 
-	async function goToAdmin() {
-		const res = await fetch("/admin", { method: "GET" });
-		if (res.status == 200) {
-			const html = location.replace("../../admin.html");
-		}
-	}
+		let validCount = 0;
+		inputs.forEach((ele) => {
+			if (ele.id.toUpperCase == ele.value.toUpperCase) {
+				validCount += 1;
+			}
+		});
 
+		crosswordForm.reset();
+
+		const json = { name: crosswordName, count: validCount },
+			body = JSON.stringify(json);
+		const response = await fetch("/validateCrossword", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body,
+		});
+
+		const data = await response.json();
+		return data;
+	};
+
+
+	onMount(async () => {
+		// crosswordData = rows.map((row) => row.split(""));
+		crosswordSelect = await getCrosswordData(); // Assuming user's filled data is fetched separately
+		crossword = crosswordSelect.cw;
+		crosswordName = crosswordSelect.name;
+
+		let user = await getUser();
+		authUser = user;
+		console.log(crossword);
+	});
 </script>
 
-<div
-	class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow"
->
-	<a class="btn btn-outline-primary" href="../">Back to Home</a>
-	<h5 class="left my-0 mr-md-auto font-weight-normal">WPI Games</h5>
-	<nav class="my-2 my-md-0 mr-md-3">
+<div class="container" id="crossword-container">
+	<form id="crosswordForm">
+		<table class="table table-reactive-sm">
+			{#each Object.values(crossword) as row}
+				<tr>
+					{#each Object.values(row) as cell}
+						{#if cell == "!"}
+							<td class="bg-dark"></td>
+						{:else}
+							<td>
+								<input
+									style="width:100%"
+									type="text"
+									class="input-group-sm"
+									name=""
+									id={cell}
+								/>
+							</td>
+						{/if}
+					{/each}
+				</tr>
+			{/each}
+		</table>
 		<button
-			type="button"
-			class="btn btn-outline-primary"
-			on:click={goToAdmin}>{authUser}</button
+			on:click={checkHangman}
+			type="submit"
+			class="btn btn-lg btn-block btn-primary"
+			value="check">Check Hangman</button
 		>
-	</nav>
-	<a class="btn btn-outline-primary" href="../login.html">Log Out</a>
+	</form>
 </div>
-
-<div id="crossword-container">
-  <table class="table">
-    {#each crosswordData as row, rowIndex}
-      <tr>
-        {#each row as cell, colIndex}
-          {#if cell == "!"}
-            <td class="table-dark"></td>
-          {:else}
-            <td>
-              <input
-                on:input={handleInput}
-                type="text"
-                class="input-group-sm"
-                name=""
-                id={cell}
-              />
-            </td>
-          {/if}
-        {/each}
-      </tr>
-    {/each}
-  </table>
-</div>
-
-<!-- 
-  <div>
-  <ol>
-    {#each clues as descr}
-      <li>{descr}</li>
-
-    {/each}
-  </ol>
-</div> -->
 
 {#if endMessage !== ""}
-  <p>{endMessage}</p>
+	<p>{endMessage}</p>
 {/if}
