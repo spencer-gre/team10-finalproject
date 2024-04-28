@@ -131,7 +131,9 @@ app.get('/crosswordData', async (req, res) => {
   const cwName = crossword.name;
   delete crossword.name;
   delete crossword._id;
-  delete crossword.vales;
+  delete crossword.values;
+  delete crossword.Across;
+  delete crossword.Down;
 
   const ret = {cw: crossword, name: cwName};
 
