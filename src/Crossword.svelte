@@ -44,8 +44,8 @@
 
 		let validCount = 0;
 		inputs.forEach((ele) => {
-			if (ele.id.toLowerCase() === ele.value.toLowerCase()) {
-				validCount += 1;
+			if (ele.className.toLowerCase() === ele.value.toLowerCase()) {
+				validCount++;
 			}
 		});
 
@@ -94,8 +94,8 @@
 										<input
 											style="width:100%"
 											type="text"
-											class="input-group-sm"
-											name=""
+											class={cell}
+											name={cell}
 											id={cell}
 											value=''
 										/>
