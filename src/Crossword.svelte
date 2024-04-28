@@ -79,7 +79,7 @@
 <main>
 	<body>
 		<Header {authUser} />
-		<p>crosswordName</p>
+		<p>{crosswordName}</p>
 		<div class="container" id="crossword-container">
 			<form id="crosswordForm">
 				<table class="table table-reactive-sm">
