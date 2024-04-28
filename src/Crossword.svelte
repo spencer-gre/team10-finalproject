@@ -2,9 +2,9 @@
 	import { onMount } from "svelte";
 
 	let authUser;
-	let numRows = 6; //number of rows
-	let numCols = 11; //number of cols
-	let crosswordData = [];
+	let crosswordSelect;
+	let crossword = [];
+	let crosswordName;
 	let userCrosswordData = [];
 	let selectedButtons = [];
 	let buttonsDisabled = false;
@@ -34,80 +34,74 @@
 		return data;
 	};
 
-	const checkCrosswordCompletion = () => {
-		const filledCrossword = crosswordData
-			.flat()
-			.filter((cell) => cell !== "!")
-			.join("");
-		const solution = userCrosswordData
-			.flat()
-			.filter((cell) => cell !== "!")
-			.join("");
-		if (filledCrossword === solution) {
-			endMessage = "Congratulations! You completed the crossword!";
-		}
-	};
+	
 
-	// Function to handle user input
-	const handleInput = function (rowIndex, colIndex, value) {
-		if (crosswordData[rowIndex][colIndex] === value) {
-			userCrosswordData[rowIndex][colIndex] = value;
-			checkCrosswordCompletion();
-		}
-		console.log(rowIndex);
+	const checkHangman = async function (event) {
+		event.preventDefault();
+		console.log(event);
+
+    const crosswordForm = document.getElementById("crosswordForm");
+    const inputs = crosswordForm.querySelectorAll("input");
+    
+    let validCount = 0;
+    inputs.forEach(ele => {
+      if (ele.id.toUpperCase == ele.value.toUpperCase) {
+        validCount += 1;
+      }
+    })
+
+    crosswordForm.reset();
+
+    const json = { name: crosswordName, count: validCount },
+      body = JSON.stringify(json);
+    const response = await fetch ("/validateCrossword", {
+      method: "POST",
+			headers: { "Content-Type": "application/json" },
+      body,
+    });
+
+		const data = await response.json();
+		return data;
+    
 	};
 
 	onMount(async () => {
-		const rows = [
-			"!!!!l!!!!!!",
-			"!!!!e!!!u!!",
-			"!!!!seven!!",
-			"!!!!h!!!iqp",
-			"foisie!!t!!",
-			"!!!!n!!!y!!",
-		];
-		crosswordData = rows.map((row) => row.split(""));
-		userCrosswordData = await getCrosswordData(); // Assuming user's filled data is fetched separately
+		// crosswordData = rows.map((row) => row.split(""));
+		crosswordSelect = await getCrosswordData(); // Assuming user's filled data is fetched separately
+		crossword = crosswordSelect.cw;
+		crosswordName = crosswordSelect.name;
+
 		let user = await getUser();
 		authUser = user;
-
-		console.log(userCrosswordData);
+		console.log(crossword);
 	});
 </script>
 
 <div id="crossword-container">
-	<table class="table">
-		{#each crosswordData as row, rowIndex}
-			<tr>
-				{#each row as cell, colIndex}
-					{#if cell == "!"}
-						<td class="table-dark"></td>
-					{:else}
-						<td>
-							<input
-								on:input={handleInput}
-								type="text"
-								class="input-group-sm"
-								name=""
-								id={cell}
-							/>
-						</td>
-					{/if}
-				{/each}
-			</tr>
-		{/each}
-	</table>
+	<form id="crosswordForm">
+		<table class="table table-sm">
+			{#each Object.values(crossword) as row}
+				<tr>
+					{#each Object.values(row) as cell}
+						{#if cell == "!"}
+							<td class="bg-dark"></td>
+						{:else}
+							<td>
+								<input type="text" class="input-group-sm" name="" id={cell} />
+							</td>
+						{/if}
+					{/each}
+				</tr>
+			{/each}
+		</table>
+		<button
+			on:click={checkHangman}
+			type="submit"
+			class="btn btn-lg btn-block btn-primary"
+			value="check">Check Hangman</button
+		>
+	</form>
 </div>
-
-<!-- 
-  <div>
-  <ol>
-    {#each clues as descr}
-      <li>{descr}</li>
-
-    {/each}
-  </ol>
-</div> -->
 
 {#if endMessage !== ""}
 	<p>{endMessage}</p>

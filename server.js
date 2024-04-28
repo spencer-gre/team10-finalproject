@@ -134,9 +134,38 @@ app.get('/crosswordData', async (req, res) => {
 
   const ret = {cw: crossword, name: cwName};
 
-
   res.writeHead( 200, { 'Content-Type': 'application/json'});
   res.end(JSON.stringify(ret));
+})
+
+app.post('/validateCrossword', async (req, res) => {
+  const db = database();
+  const coll = await db.collection("crosswords");
+  
+  let crosswordData; 
+  const cwName = req.body.name;
+
+  const query = {name: cwName };
+  crosswordData = await coll.findOne(query);
+
+  if (crosswordData._id) {
+    delete crosswordData._id;
+    delete crosswordData.name;
+
+    let data = [];
+    for (const [key, value] of Object.entries(crosswordData)) {
+      // console.log(value);
+      data.push(Object.values(value));
+    }
+    console.log(data);
+    // console.log(Object.keys(crosswordData));
+    // crosswordData.forEach(element => {
+    //   let vals = Object.values(element);
+    //   data.push(vals);
+    // });
+    // console.log(data);
+  }
+  
 })
 
 connect().then(() => {
