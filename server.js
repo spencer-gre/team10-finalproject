@@ -131,6 +131,7 @@ app.get('/crosswordData', async (req, res) => {
   const cwName = crossword.name;
   delete crossword.name;
   delete crossword._id;
+  delete crossword.vales;
 
   const ret = {cw: crossword, name: cwName};
 
@@ -147,25 +148,13 @@ app.post('/validateCrossword', async (req, res) => {
 
   const query = {name: cwName };
   crosswordData = await coll.findOne(query);
+  const values = crosswordData.values;
 
-  if (crosswordData._id) {
-    delete crosswordData._id;
-    delete crosswordData.name;
-
-    let data = [];
-    for (const [key, value] of Object.entries(crosswordData)) {
-      // console.log(value);
-      data.push(Object.values(value));
-    }
-    console.log(data);
-    // console.log(Object.keys(crosswordData));
-    // crosswordData.forEach(element => {
-    //   let vals = Object.values(element);
-    //   data.push(vals);
-    // });
-    // console.log(data);
+  if (values == req.body.count) {
+    res.status(200).send("OK");
+  } else {
+    res.status(500).send("GOOFBALL");
   }
-  
 })
 
 connect().then(() => {

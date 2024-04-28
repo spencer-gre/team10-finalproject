@@ -34,35 +34,32 @@
 		return data;
 	};
 
-	
-
 	const checkHangman = async function (event) {
 		event.preventDefault();
 		console.log(event);
 
-    const crosswordForm = document.getElementById("crosswordForm");
-    const inputs = crosswordForm.querySelectorAll("input");
-    
-    let validCount = 0;
-    inputs.forEach(ele => {
-      if (ele.id.toUpperCase == ele.value.toUpperCase) {
-        validCount += 1;
-      }
-    })
+		const crosswordForm = document.getElementById("crosswordForm");
+		const inputs = crosswordForm.querySelectorAll("input");
 
-    crosswordForm.reset();
+		let validCount = 0;
+		inputs.forEach((ele) => {
+			if (ele.id.toUpperCase == ele.value.toUpperCase) {
+				validCount += 1;
+			}
+		});
 
-    const json = { name: crosswordName, count: validCount },
-      body = JSON.stringify(json);
-    const response = await fetch ("/validateCrossword", {
-      method: "POST",
+		crosswordForm.reset();
+
+		const json = { name: crosswordName, count: validCount },
+			body = JSON.stringify(json);
+		const response = await fetch("/validateCrossword", {
+			method: "POST",
 			headers: { "Content-Type": "application/json" },
-      body,
-    });
+			body,
+		});
 
 		const data = await response.json();
 		return data;
-    
 	};
 
 	onMount(async () => {
@@ -77,9 +74,9 @@
 	});
 </script>
 
-<div id="crossword-container">
+<div class="container" id="crossword-container">
 	<form id="crosswordForm">
-		<table class="table table-sm">
+		<table class="table table-reactive-sm">
 			{#each Object.values(crossword) as row}
 				<tr>
 					{#each Object.values(row) as cell}
@@ -87,7 +84,13 @@
 							<td class="bg-dark"></td>
 						{:else}
 							<td>
-								<input type="text" class="input-group-sm" name="" id={cell} />
+								<input
+									style="width:100%"
+									type="text"
+									class="input-group-sm"
+									name=""
+									id={cell}
+								/>
 							</td>
 						{/if}
 					{/each}
