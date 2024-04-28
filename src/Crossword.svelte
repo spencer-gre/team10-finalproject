@@ -44,10 +44,12 @@
 
 		let validCount = 0;
 		inputs.forEach((ele) => {
-			if (ele.id.toUpperCase == ele.value.toUpperCase) {
+			if (ele.id.toLowerCase() === ele.value.toLowerCase()) {
 				validCount += 1;
 			}
 		});
+
+		console.log(validCount);
 
 		crosswordForm.reset();
 
@@ -95,6 +97,7 @@
 											class="input-group-sm"
 											name=""
 											id={cell}
+											value=''
 										/>
 									</td>
 								{/if}
