@@ -65,7 +65,7 @@
               type="button"
               class="btn btn-lg btn-block btn-primary"
               on:click={goToCrossword}>Play now</button
-              >Play now</button
+              
             >
             <!--on:click added for testing purposes-->
           </div>
