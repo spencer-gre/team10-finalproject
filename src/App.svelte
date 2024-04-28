@@ -49,7 +49,6 @@
 			<h1 class="display-4">Games</h1>
 			<p class="lead">Choose a game to learn more about WPI</p>
 		</div>
-
 		<div class="container">
 			<div class="card-deck mb-3 text-center">
 				<div class="card mb-4 box-shadow">
@@ -83,6 +82,7 @@
 				</div>
 			</div>
 		</div>
+
 
 		<!-- Bootstrap core JavaScript - Placed at the end of the document so the pages load faster -->
 		<!-- Bootstrap core JavaScript - Placed at the end of the document so the pages load faster -->

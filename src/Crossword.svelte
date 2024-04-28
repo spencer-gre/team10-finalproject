@@ -41,6 +41,7 @@
 		const crosswordForm = document.getElementById("crosswordForm");
 		const inputs = crosswordForm.querySelectorAll("input");
 
+
 		let validCount = 0;
 		inputs.forEach((ele) => {
 			if (ele.id.toUpperCase == ele.value.toUpperCase) {
@@ -61,6 +62,7 @@
 		const data = await response.json();
 		return data;
 	};
+
 
 	onMount(async () => {
 		// crosswordData = rows.map((row) => row.split(""));
