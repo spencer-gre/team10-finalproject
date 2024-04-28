@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from "svelte";
 	import Header from "./lib/Header.svelte";
+	import res from "express/lib/response";
 
 	let authUser;
 	let crosswordSelect;
@@ -58,9 +59,9 @@
 			headers: { "Content-Type": "application/json" },
 			body,
 		});
-
-		const data = await response.json();
-		return data;
+		
+		const res = await response.status;
+		console.log(res);
 	};
 
 	onMount(async () => {
@@ -78,7 +79,7 @@
 <main>
 	<body>
 		<Header {authUser} />
-
+		<p>crosswordName</p>
 		<div class="container" id="crossword-container">
 			<form id="crosswordForm">
 				<table class="table table-reactive-sm">
