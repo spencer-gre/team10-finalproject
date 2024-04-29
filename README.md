@@ -1,5 +1,7 @@
 # WPI Games
 
+Now accessible 24/7/365: [https://team10-finalproject.onrender.com/](https://team10-finalproject.onrender.com/)
+
 An online platform to play hangman, crossword (and in the future more?) games, with Worcester Polytechnic Institute in mind! Designed to educate new-commers to WPI lore, traditions, and terminology, this is a great collection of entertaining games to learn more about what goes on here at WPI and its history! There is also an administrative user type that can add and remove words from the hangman game.
 
 **Team Members:**
