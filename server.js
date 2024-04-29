@@ -129,13 +129,15 @@ app.get('/crosswordData', async (req, res) => {
   const crossword = crosswordData[random]
 
   const cwName = crossword.name;
+  const hintAcross = crossword.Across;
+	const hintDown = crossword.Down;
   delete crossword.name;
   delete crossword._id;
   delete crossword.values;
   delete crossword.Across;
   delete crossword.Down;
 
-  const ret = {cw: crossword, name: cwName};
+  const ret = {cw: crossword, name: cwName, Across: hintAcross, Down: hintDown};
 
   res.writeHead( 200, { 'Content-Type': 'application/json'});
   res.end(JSON.stringify(ret));
