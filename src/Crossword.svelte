@@ -59,17 +59,28 @@
 		console.log(res);
 	};
 
+	const hintStrToArray = function (strHints){
+		let hints = [];
+		hints =  strHints.split('\n');
+		return hints;
+	}
+
 	onMount(async () => {
 		// crosswordData = rows.map((row) => row.split(""));
 		crosswordSelect = await getCrosswordData(); // Assuming user's filled data is fetched separately
 		crossword = crosswordSelect.cw;
 		crosswordName = crosswordSelect.name;
-		hintAcross = crosswordSelect.Across;
-    	hintDown = crosswordSelect.Down;
+		hintAcross = hintStrToArray(crosswordSelect.Across);
+		hintDown = hintStrToArray(crosswordSelect.Down);
+
+		// hintAcross = crosswordSelect.Across;
+    	// hintDown = crosswordSelect.Down;
+		
 
 		let user = await getUser();
 		authUser = user;
 		console.log(crossword);
+		console.log(hintAcross)
 	});
 </script>
 
