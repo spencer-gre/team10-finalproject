@@ -3,6 +3,7 @@
   import Header from "./lib/Header.svelte";
 
   let user;
+  let hangmans = [];
   
 
   const getUser = async function () {
@@ -55,9 +56,24 @@
     }
   }
 
+  const getHangmans = async function() {
+    const response = await fetch("/hangmanWords", {
+      method: "GET",
+    });
+    let data = await response.json();
+    let words = [];
+    for (let val of Object.values(data)) {
+      words.push(val.word);
+    }
+    return words;
+  }
+
   onMount(async () => {
     let github = await getUser();
     user = github;
+    hangmans = await getHangmans();
+    // console.log(hangmans)
+    console.log(Object.values(hangmans))
   });
 </script>
 
@@ -69,20 +85,6 @@
 
       <div class="container">
         <div class="card-deck mb-3 text-center">
-          <div class="card mb-4 box-shadow">
-            <div class="card-header">
-              <h4 class="my-0 font-weight-normal">Crossword - Management</h4>
-            </div>
-            <div class="card-body">
-              <p class="mt-3 mb-4">Guess which WPI word is being used</p>
-              <button
-                type="button"
-                class="btn btn-lg btn-block btn-primary"
-                >Play now</button
-              >
-              <!--on:click added for testing purposes-->
-            </div>
-          </div>
           <div class="card mb-4 box-shadow">
             <div class="card-header">
               <h4 class="my-0 font-weight-normal">Hangman - Management</h4>
@@ -97,6 +99,21 @@
                 <button on:click={insertHangman} type="submit" class="btn btn-lg btn-block btn-primary" value="insert">Insert</button>
                 <button on:click={removeHangman} type="submit" class="btn btn-lg btn-block btn-primary" value="remove">Remove</button>
               </form>
+            </div>
+          </div>
+          <div class="card mb-4 box-shadow">
+            <div class="card-header">
+              <h4 class="my-0 font-weight-normal">Hangman - Word List</h4>
+            </div>
+            <div class="card-body">
+              <p class="mt-3 mb-4">List of Hangman Words</p>
+              <ul class="list-group">
+                {#each Object.values(hangmans) as hangmany}
+                  <li class="list-group-item">
+                    {hangmany}
+                  </li>
+                {/each}
+              </ul>
             </div>
           </div>
         </div>
