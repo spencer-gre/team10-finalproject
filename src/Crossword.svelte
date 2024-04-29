@@ -91,9 +91,9 @@
 		<Header {authUser} />
 
 		<div class="text-center">
-			<p>{crosswordName}</p>
+			<p class="header">{crosswordName}</p>
 			{#if endMessage !== ""}
-				<p>{endMessage}</p>
+				<p class="header">{endMessage}</p>
 			{/if}
 			<button type="button" class="btn btn-secondary" on:click={newWord}
 				>New Crossword</button
@@ -132,6 +132,7 @@
 			</form>
 		</div>
 		<div class="text-center">
+			<p><em>Numbering Convention<br></em> Across: Numbering goes from top to bottom, if two words on same level, goes from left to right.<br>Down: Numbering goes from left to right, if two words on same level, goes top to bottom.</p>
 			<h2>Across Hints:</h2>
 			<ul>
 				{#each hintAcross as hint}
