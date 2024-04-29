@@ -31,7 +31,7 @@
     });
 
     if (response.ok) {
-      // maybe do something
+      window.location.reload()
     }
   }
 
@@ -52,7 +52,7 @@
     });
 
     if (response.ok) {
-      // maybe do something
+      window.location.reload()
     }
   }
 
