@@ -8,17 +8,11 @@
 	let crosswordName;
 	let userCrosswordData = [];
 	let selectedButtons = [];
+	
 	let buttonsDisabled = false;
 	let endMessage = "";
-	let cluesAcross = [
-		"3. Number of original WPI founders",
-		"4. Acronym for the interdisciplinary project typically done off-campus",
-		"5. Original name of the Innovation Studio",
-	];
-	let cluesDown = [
-		"1. Last name of the previous president of WPI",
-		"2. Newest acaedmic building on campus",
-	];
+	let hintAcross = [];
+	let hintDown = [];
 
 	const getUser = async function () {
 		const response = await fetch("/auth/user", {
@@ -70,6 +64,8 @@
 		crosswordSelect = await getCrosswordData(); // Assuming user's filled data is fetched separately
 		crossword = crosswordSelect.cw;
 		crosswordName = crosswordSelect.name;
+		hintAcross = crosswordSelect.Across;
+    	hintDown = crosswordSelect.Down;
 
 		let user = await getUser();
 		authUser = user;
@@ -109,11 +105,23 @@
 					on:click={checkCrossword}
 					type="submit"
 					class="btn btn-lg btn-block btn-primary"
-					value="check">Check Crossword</button
-				>
+					value="check">Check Crossword</button>
 			</form>
 		</div>
-
+		<div>
+			<h2>Across Hints:</h2>
+			<ul>
+				{#each hintAcross as hint}
+					<li>{hint}</li>
+				{/each}
+			</ul>
+			<h2>Down Hints:</h2>
+			<ul>
+				{#each hintDown as hint}
+					<li>{hint}</li>
+				{/each}
+			</ul>
+		</div>
 		{#if endMessage !== ""}
 			<p>{endMessage}</p>
 		{/if}
